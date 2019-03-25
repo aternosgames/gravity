@@ -1,0 +1,17 @@
+{
+  "name": "gravity",
+  "version": "0.1.0",
+  "description": "Library for model based database abstraction, e.g. to create REST APIs.",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config jestconfig.json"
+  },
+  "author": "Matthias Neid",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "jest": "^24.5.0",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.4000"
+  }
+}
