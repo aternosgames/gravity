@@ -1,5 +1,5 @@
 import BackendInterface from "./BackendInterface";
-import ModelInterface from "../Model/ModelInterface";
+import Model from "../Model/Model";
 
 /**
  * Example/test backend which stores data in the memory
@@ -8,7 +8,7 @@ export default class MemoryBackend implements BackendInterface {
     /**
      * All models are stored here
      */
-    protected storage: { [index: string]: { [index: string]: ModelInterface } } = {};
+    protected storage: { [index: string]: { [index: string]: Model } } = {};
 
     /**
      * Generate space in memory storage for models
@@ -26,7 +26,7 @@ export default class MemoryBackend implements BackendInterface {
      *
      * @param model
      */
-    create(model: ModelInterface): boolean {
+    create(model: Model): boolean {
         if (model.id === null) {
             model.id = this.generateId(model.getName());
         }
@@ -42,7 +42,7 @@ export default class MemoryBackend implements BackendInterface {
      *
      * @param model
      */
-    update(model: ModelInterface): boolean {
+    update(model: Model): boolean {
         if (!this.get(model)) {
             return false;
         }
@@ -55,7 +55,7 @@ export default class MemoryBackend implements BackendInterface {
      *
      * @param model
      */
-    get(model: ModelInterface): boolean {
+    get(model: Model): boolean {
         this.generateNamespace(model.getName());
 
         if (model.id === null) {
@@ -74,7 +74,7 @@ export default class MemoryBackend implements BackendInterface {
      *
      * @param model
      */
-    delete(model: ModelInterface): boolean {
+    delete(model: Model): boolean {
         this.generateNamespace(model.getName());
 
         if (typeof model.id === "string") {

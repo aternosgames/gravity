@@ -1,4 +1,4 @@
-import ModelInterface from "../Model/ModelInterface";
+import Model from "../Model/Model";
 
 /**
  * A backend is used by the models to access/store data
@@ -9,26 +9,26 @@ export default interface BackendInterface {
      *
      * @param model
      */
-    create(model: ModelInterface): boolean;
+    create(model: Model): boolean;
 
     /**
      * Update a model
      *
      * @param model
      */
-    update(model: ModelInterface): boolean;
+    update(model: Model): boolean;
 
     /**
      * Get a model by id, update model object on success
      *
      * @param model
      */
-    get(model: ModelInterface): boolean;
+    get(model: Model): boolean;
 
     /**
      * Delete a model by id
      *
      * @param model
      */
-    delete(model: ModelInterface): boolean;
+    delete(model: Model): boolean;
 }

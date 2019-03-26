@@ -1,9 +1,13 @@
-import ModelInterface from "./ModelInterface";
+
 
 /**
  * Basic model implementation, should be extended to create own models
  */
-export default abstract class Model implements ModelInterface {
+export default abstract class Model {
+    public static getName(): string {
+        throw new Error("Every model has to overwrite the static getName() function.");
+    };
+
     abstract getName(): string;
 
     protected _id: string | null = null;
