@@ -15,7 +15,7 @@ export default class RestFrontend extends Frontend {
         super.init(models);
 
         let app = HTTPServer.getInstance().app;
-        app.get("/:name/:id", this.get);
+        app.get("/:name/:id", (request, response) => { this.get(request, response) });
         app.post("/:name", this.post);
         app.put("/:name/:id", this.put);
         app.delete("/:name/:id", this.delete);
@@ -67,7 +67,7 @@ export default class RestFrontend extends Frontend {
                 }
 
                 response.status(200);
-                response.json(model);
+                response.json({success: true, data: model});
             });
         } catch (error) {
             RestFrontend.passErrorToResponse(response, error);
@@ -87,10 +87,18 @@ export default class RestFrontend extends Frontend {
     }
 
     static passErrorToResponse(response: Response, error: FrontendError) {
-        response.status(error.code);
-        response.json({
-            success: false,
-            error: error.message
-        });
+        if (error.code) {
+            response.status(error.code);
+            response.json({
+                success: false,
+                error: error.message
+            });
+        } else {
+            response.status(500);
+            response.json({
+                success: false
+            });
+            throw error;
+        }
     }
 }

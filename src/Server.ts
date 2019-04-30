@@ -49,7 +49,9 @@ export default class Server {
         for (let frontend of this.frontends) {
             frontend.init(this.models);
             frontend.start();
-            frontend.on(FrontendEvent.Get, this.backend.get);
+            frontend.on(FrontendEvent.Get, (model, callback) => {
+                this.backend.get(model, callback)
+            });
         }
         return true;
     }
