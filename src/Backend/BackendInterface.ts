@@ -22,8 +22,9 @@ export default interface BackendInterface {
      * Get a model by id, update model object on success
      *
      * @param model
+     * @param callback
      */
-    get(model: Model): boolean;
+    get(model: Model, callback: any): boolean;
 
     /**
      * Delete a model by id

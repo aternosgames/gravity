@@ -1,5 +1,6 @@
 import BackendInterface from "./BackendInterface";
 import Model from "../Model/Model";
+import {NotFoundError} from "../Frontend/FrontendError";
 
 /**
  * Example/test backend which stores data in the memory
@@ -54,18 +55,23 @@ export default class MemoryBackend implements BackendInterface {
      * Get a model from memory by id
      *
      * @param model
+     * @param callback
      */
-    get(model: Model): boolean {
+    get(model: Model, callback: any = () => {}): boolean {
         this.generateNamespace(model.getName());
 
         if (model.id === null) {
+            callback(new NotFoundError("Object " + model.getName() + "/" + model.id + " not found."));
             return false;
         }
 
         if (typeof this.storage[model.getName()][model.id] !== "undefined") {
             Object.assign(model, this.storage[model.getName()][model.id]);
+            callback(null, model);
             return true;
         }
+
+        callback(new NotFoundError("Object " + model.getName() + "/" + model.id + " not found."));
         return false;
     }
 

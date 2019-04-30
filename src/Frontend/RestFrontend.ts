@@ -3,7 +3,7 @@ import {Request, Response} from "express";
 import ModelList from "../Model/ModelList";
 import HTTPServer from "./HTTPServer";
 import Model from "../Model/Model";
-import {ModelNotFoundError, RequiredIdNotFoundError} from "./FrontendError";
+import {FrontendError, ModelNotFoundError, RequiredIdNotFoundError} from "./FrontendError";
 import {FrontendEvent} from "./FrontendEvent";
 
 /**
@@ -53,14 +53,22 @@ export default class RestFrontend extends Frontend {
         try {
             let model = this.getModelFromRequest(request);
             if (model === false) {
-                RestFrontend.passErrorToResponse(response, new ModelNotFoundError("Model not found."), 400);
+                RestFrontend.passErrorToResponse(response, new ModelNotFoundError("Model not found."));
                 return;
             }
             if (model.id === null) {
-                RestFrontend.passErrorToResponse(response, new RequiredIdNotFoundError("ID is required, but not present."), 400);
+                RestFrontend.passErrorToResponse(response, new RequiredIdNotFoundError("ID is required, but not present."));
                 return;
             }
-            this.emit(FrontendEvent.Get, model);
+            this.emit(FrontendEvent.Get, model, (error: FrontendError | null, model?: Model) => {
+                if (error) {
+                    RestFrontend.passErrorToResponse(response, error);
+                    return;
+                }
+
+                response.status(200);
+                response.json(model);
+            });
         } catch (error) {
             RestFrontend.passErrorToResponse(response, error);
         }
@@ -78,8 +86,8 @@ export default class RestFrontend extends Frontend {
 
     }
 
-    static passErrorToResponse(response: Response, error: Error, code: number = 500) {
-        response.status(code);
+    static passErrorToResponse(response: Response, error: FrontendError) {
+        response.status(error.code);
         response.json({
             success: false,
             error: error.message
